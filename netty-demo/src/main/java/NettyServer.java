@@ -18,10 +18,10 @@ public class NettyServer {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
 
             serverBootstrap
-                    .group(parentGroup, childGroup)
-                    .channel(NioServerSocketChannel.class)  // 监听端口的 ServerSocketChannel
-                    .option(ChannelOption.SO_BACKLOG, 1024)
-                    .childHandler(new ChildChannelHandler());
+                    .group(parentGroup, childGroup) // 设置两个线程组
+                    .channel(NioServerSocketChannel.class)  // 初始化 NioServerSocketChannel 的工厂
+                    .option(ChannelOption.SO_BACKLOG, 1024) // 设置一些网络相关的参数
+                    .childHandler(new ChildChannelHandler());   // 业务逻辑处理的链条，自己实现的
 
             ChannelFuture bindFuture = serverBootstrap.bind(50070).sync();  // 同步等待启动服务器监控端口
 
