@@ -339,6 +339,9 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
         }
     }
 
+    /**
+     * 初始化 ServerSocketChannel，并且绑定到 Selector 上
+     */
     final ChannelFuture initAndRegister() {
         Channel channel = null;
         try {

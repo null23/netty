@@ -1,3 +1,5 @@
+package io.netty.example.demo;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerAdapter;

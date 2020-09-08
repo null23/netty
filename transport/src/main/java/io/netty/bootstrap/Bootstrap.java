@@ -175,6 +175,7 @@ public class Bootstrap extends AbstractBootstrap<Bootstrap, Channel> {
      */
     private ChannelFuture doResolveAndConnect(final SocketAddress remoteAddress, final SocketAddress localAddress) {
         // 初始化并注册一个 Channel 对象，因为注册是异步的过程，所以返回一个 ChannelFuture 对象。
+        // 初始化一个 SocketChannel，并且注册到 Selector 上
         final ChannelFuture regFuture = initAndRegister();
         final Channel channel = regFuture.channel();
 
