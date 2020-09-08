@@ -38,6 +38,8 @@ public class NettyServer {
      * 用来代表处理每个客户端连接的 SocketChannel
      */
     private static class ChildChannelHandler extends ChannelInitializer<SocketChannel> {
+
+        @Override
         protected void initChannel(SocketChannel socketChannel) throws Exception {
             socketChannel.pipeline().addLast(new NettyServerHandler()); // 针对网络请求的处理逻辑
         }
