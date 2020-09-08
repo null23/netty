@@ -62,6 +62,7 @@ public class NioEventLoopGroup extends MultithreadEventLoopGroup {
     }
 
     public NioEventLoopGroup(int nThreads, Executor executor) {
+        // nThreads = 0，executor = null，SelectorProvider.provider() 是 NIO 提供的 Selector 生产器
         this(nThreads, executor, SelectorProvider.provider());
     }
 
