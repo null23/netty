@@ -546,7 +546,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
                         // 处理 Channel 感兴趣的就绪 IO 事件
                         processSelectedKeys();
                     } finally {
-                        // 运行所有普通任务和定时任务，不限制时间
+                        // 运行所有普通任务和定时任务，不限制时间，就比如 execute 提交的
                         // Ensure we always run tasks.
                         runAllTasks();
                     }
