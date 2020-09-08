@@ -154,9 +154,10 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
 
     @Override
     void init(Channel channel) throws Exception {
-        // 初始化 Channel 的可选项集合
+        // 初始化 ServerSocketChannel 的网络相关的参数
         final Map<ChannelOption<?>, Object> options = options0();
         synchronized (options) {
+            // 设置一些网络相关的参数，比如 TCP_NO_DELAY 什么的
             setChannelOptions(channel, options, logger);
         }
 
@@ -170,6 +171,7 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
             }
         }
 
+        // 获取对网络请求处理的链路
         ChannelPipeline p = channel.pipeline();
 
         // 记录当前的属性
@@ -184,7 +186,7 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
             currentChildAttrs = childAttrs.entrySet().toArray(newAttrArray(0));
         }
 
-        // 添加 ChannelInitializer 对象到 pipeline 中，用于后续初始化 ChannelHandler 到 pipeline 中。
+        // 就是对网络请求处理链路加一个 Netty 自己内置的处理逻辑
         p.addLast(new ChannelInitializer<Channel>() {
 
             @Override

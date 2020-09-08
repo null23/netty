@@ -27,6 +27,8 @@ public interface EventLoopGroup extends EventExecutorGroup {
 
     /**
      * Return the next {@link EventLoop} to use
+     * EventLoop 其实就是一个线程
+     * 这里就是返回一个线程回去，每次调用就轮询返回一个线程
      */
     @Override
     EventLoop next();

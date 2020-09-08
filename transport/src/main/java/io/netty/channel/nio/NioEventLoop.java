@@ -484,6 +484,10 @@ public final class NioEventLoop extends SingleThreadEventLoop {
         }
     }
 
+    /**
+     * todo
+     * 核心逻辑
+     */
     @Override
     protected void run() {
         for (;;) {

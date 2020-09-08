@@ -80,8 +80,11 @@ public class NioServerSocketChannel extends AbstractNioMessageChannel
 
     /**
      * Create a new instance using the given {@link ServerSocketChannel}.
+     *
+     * 初始化的时候关注了 OP_ACCEPT 时间，并且设置成非阻塞模式
      */
     public NioServerSocketChannel(ServerSocketChannel channel) {
+        // 初始化的时候关注了 OP_ACCEPT 时间，并且设置成非阻塞模式
         super(null, channel, SelectionKey.OP_ACCEPT);
         config = new NioServerSocketChannelConfig(this, javaChannel().socket());
     }

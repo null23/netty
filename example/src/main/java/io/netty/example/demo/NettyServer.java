@@ -21,7 +21,10 @@ public class NettyServer {
 
             serverBootstrap
                     .group(parentGroup, childGroup) // 设置两个线程组
-                    .channel(NioServerSocketChannel.class)  // 初始化 NioServerSocketChannel 的工厂
+
+                    // 初始化 NioServerSocketChannel 的工厂，之后会通过反射来使用工厂创建一个 NioServerSocketChannel
+                    // 这个 NioServerSocketChannel 其实就是处理 客户端 连接请求的
+                    .channel(NioServerSocketChannel.class)
                     .option(ChannelOption.SO_BACKLOG, 1024) // 设置一些网络相关的参数
                     .childHandler(new ChildChannelHandler());   // 业务逻辑处理的链条，自己实现的
 

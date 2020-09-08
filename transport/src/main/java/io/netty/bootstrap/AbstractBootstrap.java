@@ -268,6 +268,7 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
 
     /**
      * Create a new {@link Channel} and bind it.
+     * 初始化 ServerSocketChannel，监听指定端口号，并且绑定到一个 Selector 上
      */
     public ChannelFuture bind(int inetPort) {
         return bind(new InetSocketAddress(inetPort));
@@ -302,6 +303,7 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
 
     private ChannelFuture doBind(final SocketAddress localAddress) {
         // 初始化并注册一个 Channel 对象，因为注册是异步的过程，所以返回一个 ChannelFuture 对象。
+        // 初始化一个 NioServerSocketChannel（demo 里初始化 ServerBootStrap 的时候设置的类类型），并且绑定到一个 Selector 上，关注 OP_ACCEPT 时间
         final ChannelFuture regFuture = initAndRegister();
         final Channel channel = regFuture.channel();
         if (regFuture.cause() != null) { // 若发生异常，直接进行返回。
@@ -312,7 +314,10 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
         if (regFuture.isDone()) { // 未
             // At this point we know that the registration was complete and successful.
             ChannelPromise promise = channel.newPromise();
-            doBind0(regFuture, channel, localAddress, promise); // 绑定
+
+            // 绑定
+            // 就是把之前的 NioServerSocketChannel 绑定到一个端口号上
+            doBind0(regFuture, channel, localAddress, promise);
             return promise;
         } else {
             // Registration future is almost always fulfilled already, but just in case it's not.
@@ -340,13 +345,15 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
     }
 
     /**
-     * 初始化 ServerSocketChannel，并且绑定到 Selector 上
+     * 初始化 ServerSocketChannel（根据初始化 ServerBootStrap 的时候指定的类类型，通过反射创建的），并且绑定到 Selector 上
      */
     final ChannelFuture initAndRegister() {
         Channel channel = null;
         try {
-            // 创建 Channel 对象
+            // 创建 Channel 对象，根据初始化 ServerBootStrap 的时候指定的类类型，通过反射创建的
+            // 初始化的时候关注 OP_ACCEPT 事件
             channel = channelFactory.newChannel();
+
             // 初始化 Channel 配置
             init(channel);
         } catch (Throwable t) {
@@ -361,6 +368,7 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
         }
 
         // 注册 Channel 到 EventLoopGroup 中
+        // 其实就是拿之前创建的 parentGroup。猜测是拿了个独立的线程，采用一个 Selector 注册 channel，然后轮询各个事件
         ChannelFuture regFuture = config().group().register(channel);
         if (regFuture.cause() != null) {
             if (channel.isRegistered()) {
