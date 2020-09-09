@@ -275,6 +275,7 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
         public void channelRead(ChannelHandlerContext ctx, Object msg) {
             // 老艿艿：如下的注释，先暂时认为是接受的客户端的 NioSocketChannel
 
+            // accept 之后返回的封装的 NioSocketChannel 对象，交付给 ChildGroup 线程组处理后续的请求
             // 接受的客户端的 NioSocketChannel 对象
             final Channel child = (Channel) msg;
             // 添加 NioSocketChannel 的处理器

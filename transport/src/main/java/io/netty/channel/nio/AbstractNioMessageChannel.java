@@ -79,6 +79,8 @@ public abstract class AbstractNioMessageChannel extends AbstractNioChannel {
                 try {
                     do {
                         // 读取客户端的连接到 readBuf 中
+                        // 接受客户端的连接请求，并且把 ServerSocketChannel.accept() 返回的 SocketChannel 封装为 NioSocketChannel
+                        // 把封装好的 NioSocketChannel 放入 readBuf 维护
                         int localRead = doReadMessages(readBuf);
                         // 无可读取的客户端的连接，结束
                         if (localRead == 0) {
@@ -104,6 +106,7 @@ public abstract class AbstractNioMessageChannel extends AbstractNioChannel {
                     // TODO 芋艿
                     readPending = false;
                     // 在内部，会通过 ServerBootstrapAcceptor ，将客户端的 Netty NioSocketChannel 注册到 EventLoop 上
+                    // todo ServerBootStrap 的 channelRead
                     pipeline.fireChannelRead(readBuf.get(i));
                 }
                 // 清空 readBuf 数组

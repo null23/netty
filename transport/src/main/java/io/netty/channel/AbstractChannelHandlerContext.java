@@ -408,6 +408,7 @@ abstract class AbstractChannelHandlerContext extends DefaultAttributeMap
     private void invokeChannelRead(Object msg) {
         if (invokeHandler()) {
             try {
+                // todo ServerBootStrap 的 channelRead
                 ((ChannelInboundHandler) handler()).channelRead(this, msg);
             } catch (Throwable t) {
                 notifyHandlerException(t); // 通知 Inbound 事件的传播，发生异常

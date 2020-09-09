@@ -546,7 +546,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
                         // 处理 Channel 感兴趣的就绪 IO 事件
                         processSelectedKeys();
                     } finally {
-                        // 运行所有普通任务和定时任务，不限制时间，就比如 execute 提交的
+                        // 运行所有普通任务和定时任务，不限制时间
                         // Ensure we always run tasks.
                         runAllTasks();
                     }
@@ -735,7 +735,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
             // 获得就绪的 IO 事件的 ops
             int readyOps = k.readyOps();
 
-            // OP_CONNECT 事件就绪
+            // 客户端的，OP_CONNECT 事件就绪
             // We first need to call finishConnect() before try to trigger a read(...) or write(...) as otherwise
             // the NIO JDK channel implementation may throw a NotYetConnectedException.
             if ((readyOps & SelectionKey.OP_CONNECT) != 0) {
@@ -762,6 +762,9 @@ public final class NioEventLoop extends SingleThreadEventLoop {
             // Also check for readOps of 0 to workaround possible JDK bug which may otherwise lead
             // to a spin loop
             if ((readyOps & (SelectionKey.OP_READ | SelectionKey.OP_ACCEPT)) != 0 || readyOps == 0) {
+                // 根据 unsafe 的类型不同，可以分别处理 读取 和 建立连接
+                // NioMessageUnsafe 处理连接请求
+                // NioByteUnsafe 处理读取请求
                 unsafe.read();
             }
         } catch (CancelledKeyException ignored) {
@@ -863,6 +866,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
             // 计算 select 截止时间，单位：纳秒。
             long selectDeadLineNanos = currentTimeNanos + delayNanos(currentTimeNanos);
 
+            // 阻塞一会，目的应该是尽量攒一下就绪的事件？
             for (;;) {
                 // 计算本次 select 的超时时长，单位：毫秒。
                 // + 500000L 是为了四舍五入
