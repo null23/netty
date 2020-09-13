@@ -46,7 +46,10 @@ public class NettyServer {
 
         @Override
         protected void initChannel(SocketChannel socketChannel) throws Exception {
-            socketChannel.pipeline().addLast(new NettyServerHandler()); // 针对网络请求的处理逻辑
+//            socketChannel.pipeline().addLast(new NettyServerHandler()); // 针对网络请求的处理逻辑
+            socketChannel.pipeline().addLast(new InBoundHandlerA());
+            socketChannel.pipeline().addLast(new InBoundHandlerB());
+            socketChannel.pipeline().addLast(new InBoundHandlerC());
         }
     }
 }
